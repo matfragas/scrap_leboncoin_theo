@@ -1,0 +1,22 @@
+# Ignorer les fichiers Python compilés
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorer les fichiers logs et les sorties d'exécution
+nohup.out
+*.log
+
+# Ignorer les fichiers d'environnement virtuel
+venv/
+.env
+
+# Ignorer le fichier d'historique des annonces
+annonces.json
+
+# Ignorer les fichiers de configuration spécifiques
+config.py
+
+# Ignorer les fichiers générés par l'OS
+.DS_Store
+Thumbs.db
