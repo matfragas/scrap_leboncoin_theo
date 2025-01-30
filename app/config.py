@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # URL de recherche Leboncoin
-LEBONCOIN_URL = "https://www.leboncoin.fr/recherche?category=9&text=maison&locations=Nantes_44000"
+LEBONCOIN_URL = "https://www.leboncoin.fr/recherche?category=9&text=maison&locations=Moissac_82200,Castelsarrasin_82100"
 
 # Email de notification (si utilisé)
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
