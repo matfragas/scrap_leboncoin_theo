@@ -52,7 +52,7 @@ def get_annonces():
                 prix_txt = annonce.find("p", class_="text-callout").text.strip()
                 lien = "https://www.leboncoin.fr" + annonce.find("a")["href"]
 
-                # 🔥 Nettoyage du prix 🔥
+                #  Nettoyage du prix 
                 prix_txt = re.sub(r"[^\d]", "", prix_txt)  # Supprime tout sauf les chiffres
                 prix = int(prix_txt) if prix_txt else 0  # Convertit en int, ou met 0 si vide
 
