@@ -30,20 +30,16 @@ def setup_driver():
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
+import re
+
 def get_annonces():
-    """Scrape les annonces depuis Leboncoin."""
+    """Scrape les annonces depuis Leboncoin et filtre selon les critères définis."""
     driver = setup_driver()
     try:
         print("🔍 Chargement de la page...")
         driver.get(LEBONCOIN_URL)
         time.sleep(5)  # Laisser la page se charger complètement
 
-        # Vérifie si la page contient des éléments attendus
-        if "Aucune annonce" in driver.page_source:
-            print("✅ Connexion réussie, mais aucune annonce trouvée.")
-        else:
-            print("✅ Connexion réussie, des annonces sont disponibles.")
-        
         # Récupérer le HTML rendu par Selenium
         page_source = driver.page_source
         soup = BeautifulSoup(page_source, "html.parser")
@@ -53,23 +49,47 @@ def get_annonces():
         for annonce in soup.find_all("li", class_="styles_adCard__klAb3"):
             try:
                 titre = annonce.find("h2", class_="text-body-2").text.strip()
-                prix = annonce.find("p", class_="text-callout").text.strip()
+                prix_txt = annonce.find("p", class_="text-callout").text.strip()
                 lien = "https://www.leboncoin.fr" + annonce.find("a")["href"]
-                annonces.append({"titre": titre, "lien": lien, "prix": prix})
-            except AttributeError:
-                # Ignore les annonces mal formatées
-                continue
 
-        print(f"🔍 {len(annonces)} annonces récupérées.")
-        for annonce in annonces[:5]:  # Affiche les 5 premières annonces
+                # 🔥 Nettoyage du prix 🔥
+                prix_txt = re.sub(r"[^\d]", "", prix_txt)  # Supprime tout sauf les chiffres
+                prix = int(prix_txt) if prix_txt else 0  # Convertit en int, ou met 0 si vide
+
+                # Filtrage par prix
+                if prix > 150000:
+                    continue  # Ignore les annonces au-dessus de 150000€
+
+                if "Terrain" in titre.lower():
+                                    continue
+                # # Filtrage par type de bien
+                # types_autorises = ["Immeuble", "Appartement", "Maison"]
+                # if not any(type_bien in titre for type_bien in types_autorises):
+                #     continue  # Ignore si le type ne correspond pas
+
+                # # Filtrage par ancienneté (le mot "ancien" doit être dans le titre)
+                # if "ancien" not in titre.lower():
+                #     continue  # Ignore si ce n'est pas un bien ancien
+
+                # Si l'annonce respecte tous les critères, on l'ajoute
+                annonces.append({"titre": titre, "prix": f"{prix}€", "lien": lien})
+
+            except AttributeError:
+                continue  # Ignore les annonces mal formatées
+
+        print(f"🔍 {len(annonces)} annonces filtrées récupérées.")
+        for annonce in annonces[:5]:  # Affiche les 5 premières annonces filtrées
             print(f"🏠 {annonce['titre']} - {annonce['prix']} - {annonce['lien']}")
 
         return annonces
 
     except Exception as e:
         print(f"❌ Erreur lors du scraping : {e}")
+        return []  # ⚠️ Retourne une liste vide si une erreur survient
     finally:
         driver.quit()
+
+
 
 def sauvegarder_annonces(annonces):
     try:
