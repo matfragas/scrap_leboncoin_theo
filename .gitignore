@@ -14,8 +14,6 @@ venv/
 # Ignorer le fichier d'historique des annonces
 annonces.json
 
-# Ignorer les fichiers de configuration spécifiques
-config.py
 
 # Ignorer les fichiers générés par l'OS
 .DS_Store
