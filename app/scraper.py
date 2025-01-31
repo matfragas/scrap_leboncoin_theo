@@ -56,21 +56,6 @@ def get_annonces():
                 prix_txt = re.sub(r"[^\d]", "", prix_txt)  # Supprime tout sauf les chiffres
                 prix = int(prix_txt) if prix_txt else 0  # Convertit en int, ou met 0 si vide
 
-                # Filtrage par prix
-                if prix > 150000:
-                    continue  # Ignore les annonces au-dessus de 150000€
-
-                if "Terrain" in titre.lower():
-                                    continue
-                # # Filtrage par type de bien
-                # types_autorises = ["Immeuble", "Appartement", "Maison"]
-                # if not any(type_bien in titre for type_bien in types_autorises):
-                #     continue  # Ignore si le type ne correspond pas
-
-                # # Filtrage par ancienneté (le mot "ancien" doit être dans le titre)
-                # if "ancien" not in titre.lower():
-                #     continue  # Ignore si ce n'est pas un bien ancien
-
                 # Si l'annonce respecte tous les critères, on l'ajoute
                 annonces.append({"titre": titre, "prix": f"{prix}€", "lien": lien})
 
