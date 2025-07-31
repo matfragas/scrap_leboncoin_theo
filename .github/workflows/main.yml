@@ -9,13 +9,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Install Chrome 138
-        run: |
-          wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7615.0/linux64/chrome-linux64.zip
-          unzip chrome-linux64.zip
-          sudo mv chrome-linux64 /opt/chrome
-          sudo ln -s /opt/chrome/chrome /usr/bin/google-chrome
         
       - name: Setup Python
         uses: actions/setup-python@v4
